@@ -2,11 +2,12 @@ from data import load_data
 from core import dominate, check
 import time
 import argparse
+from tqdm import trange
 
 
 def BNL(data):
     result = [data[0]]
-    for i in range(1, len(data)):
+    for i in trange(1, len(data)):
         insert_cur = True
         j = 0
         while j < len(result):

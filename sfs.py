@@ -3,6 +3,7 @@ from core import dominate, check
 from queue import PriorityQueue
 import time
 import argparse
+from tqdm import tqdm
 
 
 class modified_tuple(object):
@@ -21,26 +22,30 @@ def SFS(data):
         q.put(x)
 
     result = [q.get()]
-    while not q.empty():
-        insert_cur = True
-        data_cur = q.get()
-        j = 0
-        while j < len(result):
-            if dominate(data_cur, result[j]):
-                result.pop(j)
-            elif dominate(result[j], data_cur):
-                insert_cur = False
-                break
-            else:
-                j = j + 1
-        if insert_cur:
-            result.append(data_cur)
+    with tqdm(total=len(data)-1) as pbar:
+        while not q.empty():
+            insert_cur = True
+            data_cur = q.get()
+            j = 0
+            while j < len(result):
+                if dominate(data_cur, result[j]):
+                    result.pop(j)
+                elif dominate(result[j], data_cur):
+                    insert_cur = False
+                    break
+                else:
+                    j = j + 1
+            if insert_cur:
+                result.append(data_cur)
+            pbar.update(1)
     return result
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    data = load_data('data/qws_normal.txt')
+    parser.add_argument('-d', type=str, default="data/qws/qws_normal.txt")
+    args = parser.parse_args()
+    data = load_data(args.d)
     tic = time.time()
     result = SFS(data)
     toc = time.time()
