@@ -1,9 +1,8 @@
 from data import load_data
 from core import dominate, check
-from queue import PriorityQueue
+from bnl import BNL
 import time
 import argparse
-from tqdm import tqdm
 
 
 class modified_tuple(object):
@@ -17,28 +16,35 @@ class modified_tuple(object):
 
 
 def SFS(data):
+    data = [(x, sum(x)) for x in data]
+    data.sort(key=lambda item: item[1], reverse=True)
+    data = [x[0] for x in data]
+    return BNL(data)
+
+
+'''
+def SFS(data):
     q = PriorityQueue()
     for x in data:
         q.put(x)
 
     result = [q.get()]
-    with tqdm(total=len(data)-1) as pbar:
-        while not q.empty():
-            insert_cur = True
-            data_cur = q.get()
-            j = 0
-            while j < len(result):
-                if dominate(data_cur, result[j]):
-                    result.pop(j)
-                elif dominate(result[j], data_cur):
-                    insert_cur = False
-                    break
-                else:
-                    j = j + 1
-            if insert_cur:
-                result.append(data_cur)
-            pbar.update(1)
+    while not q.empty():
+        insert_cur = True
+        data_cur = q.get()
+        j = 0
+        while j < len(result):
+            if dominate(data_cur, result[j]):
+                result.pop(j)
+            elif dominate(result[j], data_cur):
+                insert_cur = False
+                break
+            else:
+                j = j + 1
+        if insert_cur:
+            result.append(data_cur)
     return result
+'''
 
 
 if __name__ == '__main__':
